@@ -1,15 +1,16 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Sidebar from "../components/Sidebar";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Spotify clone</title>
-      </Head>
+    <div className="bg-black h-screen overflow-hidden">
+      <main>
+        <Sidebar />
+        {/* Center */}
+      </main>
 
-      <h1>Spotify build</h1>
+      <div>
+        {/* Player */}
+      </div>
 
     </div>
   )
