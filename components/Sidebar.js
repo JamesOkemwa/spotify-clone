@@ -1,13 +1,15 @@
 import React from 'react'
-import {signOut} from "next-auth/react"
+import {signOut, useSession} from "next-auth/react"
 import {HomeIcon, SearchIcon, LibraryIcon, PlusCircleIcon, HeartIcon, RssIcon } from "@heroicons/react/outline"
 
 function Sidebar() {
+    const { data: session, status } = useSession();
+
   return (
     <div className="text-gray-500 p-5 text-sm border-r border-b-gray-900">
         <div className="space-y-4">
+
             <button className="flex items-center space-x-2 hover:text-white" onClick={() => signOut()}>
-                <HomeIcon className="h-5 w-5" />
                 <p>Logout</p>
             </button>
             <button className="flex items-center space-x-2 hover:text-white">
