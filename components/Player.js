@@ -1,3 +1,13 @@
+import { HeartIcon, VolumeUpIcon as VolumeDownIcon } from '@heroicons/react/outline';
+import { 
+    RewindIcon, 
+    FastForwardIcon, 
+    PauseIcon, 
+    PlayIcon, 
+    ReplyIcon, 
+    VolumeUpIcon, 
+    SwitchHorizontalIcon
+} from '@heroicons/react/solid';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil';
@@ -18,13 +28,25 @@ function Player() {
         if (!songInfo) {
             spotifyApi.getMyCurrentPlayingTrack().then(data => {
                 setCurrentTrackId(data.body?.item?.id)
-            })
+            });
 
             spotifyApi.getMyCurrentPlaybackState().then((data) => {
                 setIsPlaying(data.body?.is_playing)
-            })
-        }
-    }
+            });
+        };
+    };
+
+    const handlePlayPause = () => {
+        spotifyApi.getMyCurrentPlaybackState().then((data) => {
+            if (data.body.is_playing) {
+                spotifyApi.pause();
+                setIsPlaying(false);
+            } else {
+                spotifyApi.play();
+                setIsPlaying(true);
+            };
+        });
+    };
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && !currentTrackId) {
@@ -34,7 +56,7 @@ function Player() {
     }, [currentTrackIdState, spotifyApi, session])
 
     return (
-        <div className="h-24 bg-gradient-to-b from-black-to-gray-900 text-white grid grid-cols-3 text-xs md:text-base px-2 md:px-8">
+        <div className="h-24 bg-gradient-to-b from-black to-gray-900 text-white grid grid-cols-3 text-xs md:text-base px-2 md:px-8">
             {/* Left  */}
             <div className="flex items-center space-x-4">
                 <img 
@@ -42,11 +64,34 @@ function Player() {
                     src={songInfo?.album.images?.[0]?.url} 
                     alt=""
                 />
+                <div>
+                    <h3>{songInfo?.name}</h3>
+                    <p>{songInfo?.artists?.[0]?.name}</p>
+                </div>
             </div>
-            <div>
-                <h3>{songInfo?.name}</h3>
-                <p>{songInfo?.artists?.[0]?.name}</p>
+
+            {/* Center  */}
+            <div className="flex items-center justify-evenly">
+                <SwitchHorizontalIcon className="button" />
+                <RewindIcon 
+                    className="button" 
+                    // onClick={spotifyApi.skipToPrevious()}
+                />
+
+                {isPlaying ? (
+                    <PauseIcon onClick={handlePlayPause} className="button w-10 h-10"/>
+                ) : (
+                    <PlayIcon onClick={handlePlayPause} className="button w-10 h-10"/>
+                )}
+
+                <FastForwardIcon 
+                    className="button"
+                    // onClick={spotifyApi.skipToNext()}
+                />
+
+                <ReplyIcon className="button" />
             </div>
+            
         </div>
     )
 }
