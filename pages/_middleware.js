@@ -16,6 +16,6 @@ export async function middleware(req) {
 
     // redirect user to login if they dont have token
     if (!token && pathname !== "/login") {
-        return NextResponse.redirect(process.env.NEXTAUTH_URL)
+        return NextResponse.redirect("/login")
     }
 }
